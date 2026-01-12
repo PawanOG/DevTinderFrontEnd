@@ -1,5 +1,13 @@
+import React from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { addUser } from "./utils/userSlice";
+
 const NavBar = () => {
-    return (
+      const user = useSelector((store=> store.user));
+      console.log(user);
+    
+      return (
       <div> <div className="navbar bg-base-300">
         <div className="flex-1">
           <a className="btn btn-ghost text-xl">👩‍💻 DevTinder</a>
@@ -39,7 +47,7 @@ const NavBar = () => {
           </div>
         </div>
       </div></div>
-    )
+    );
 };
 
 export default NavBar;

@@ -1,10 +1,9 @@
-import NavBar from "./navbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./login";
 import Profile from "./profile";
 import Body from "./body";
 import { Provider } from 'react-redux';
-import appStore from "./utils/appStore";
+import appStore from "../utils/appStore";
 
 function App() {
   return (

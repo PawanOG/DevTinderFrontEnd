@@ -11,22 +11,44 @@ const Login = () => {
     const navigate = useNavigate();
     const [email,setEmail] = useState("C@gmail.com");
     const [password,setPassword] = useState("Forgotten@123");
+    const [error,setError] = useState("");
+
     const dispatch = useDispatch();
     
     const handleLogin = async () =>{
-        try{
+        // clear any previous message
+        setError("");
+
+        try {
             const res = await axios.post(BASE_URL + "login", {
                 email,
                 password
-            },{withCredentials: true});
-            console.log(res);
-            dispatch(addUser(res.data));
-            return navigate("/feed");
+            }, { withCredentials: true });
 
-            }catch(err){
-            console.log(err);
+            console.log("login response", res);
+
+            // basic sanity check – our slice expects a user object
+            const user = res.data;
+            if (!user || typeof user !== "object" || !user.email) {
+                // the server returned something other than a user
+                const msg = user?.message || user?.error || "Invalid credentials";
+                setError(msg);
+                return;
+            }
+
+            dispatch(addUser(user));
+            navigate("/feed");
+        } catch (err) {
+            const msg =
+                err?.response?.data?.message ||
+                err?.response?.data?.error ||
+                err.message ||
+                "Something went wrong";
+            setError(msg);
+            console.log("login error", msg);
         }
     }
+    
     return (
         <div className="flex min-h-screen items-center justify-center">
             <div className="card bg-base-100 image-full w-96 shadow-sm">
@@ -54,6 +76,7 @@ const Login = () => {
                         className="input" />
 
                     </fieldset>
+                        <p className="text-red-500">{error}</p>
                     <div className="card-actions flex justify-center my-5">
                         <button className="btn btn-primary " onClick={handleLogin}>Login</button>
                     </div>

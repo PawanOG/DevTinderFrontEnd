@@ -11,19 +11,17 @@ import { useSelector } from "react-redux";
 
 const Body = () => {
     const dispatch = useDispatch();
-    const Navigate = useNavigate();
+    const navigate = useNavigate();
     const userData = useSelector((store) => store.user);
 
     const fetchUser = async () => {
-        if (userData) {
-            return;
-        }
+        if (userData) return;
+
         try {
             const res = await axios.get(BASE_URL + "profile", { withCredentials: true });
             dispatch(addUser(res.data));
-        }
-        catch (err) {
-            Navigate("/login");
+        } catch (err) {
+            navigate("/login");
             console.log(err);
         }
     };
@@ -34,11 +32,11 @@ const Body = () => {
 
     return (
         <div>
-            <NavBar />
+            {userData && <NavBar />}
             <Outlet />
             <Footer />
         </div>
-    )
-}
+    );
+};
 
 export default Body;
